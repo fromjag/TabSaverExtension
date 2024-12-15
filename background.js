@@ -20,26 +20,28 @@ chrome.runtime.onInstalled.addListener(() => {
     return `${day} ${dd}/${mm}/${yyyy} ${hh}:${min}`;
   }
   
-  // Manejar el clic en el menú contextual
-  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === 'saveTabs') {
-      // Obtener todas las pestañas
-      const tabs = await chrome.tabs.query({});
-      const extensionUrl = chrome.runtime.getURL('');
-      
-      // Crear los datos de la sesión
-      const sessionData = {
-        name: '',  // Sin nombre como pediste
-        date: formatDate(new Date()),
-        urls: tabs
-          .filter(tab => !tab.url.startsWith(extensionUrl))
-          .map(tab => tab.url)
-      };
-  
-      // Obtener sesiones existentes y añadir la nueva
-      const { sessions = [] } = await chrome.storage.local.get('sessions');
-      sessions.unshift(sessionData);
-      await chrome.storage.local.set({ sessions });
+  // Manejar el clic en el icono de la extensión
+  chrome.action.onClicked.addListener(async function() {
+    // Buscar si ya existe una pestaña con la página de la extensión
+    const tabs = await chrome.tabs.query({});
+    const existingTab = tabs.find(tab => 
+      tab.url && 
+      tab.url.startsWith('chrome-extension://') && 
+      tab.url.endsWith('/tabs.html')
+    );
+    
+    if (existingTab) {
+      // Si existe, activar esa pestaña
+      await chrome.tabs.update(existingTab.id, { active: true });
+      // Si la pestaña está en otra ventana, enfocamos esa ventana
+      if (existingTab.windowId) {
+        await chrome.windows.update(existingTab.windowId, { focused: true });
+      }
+    } else {
+      // Si no existe, crear nueva pestaña
+      chrome.tabs.create({
+        url: 'tabs.html'
+      });
     }
   });
   
