@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tab Saver</title>
+  <style>
+    :root {
+      --background: #ffffff;
+      --text: #333333;
+      --border: #ddd;
+      --hover: #f5f5f5;
+      --divider: #e0e0e0;
+    }
+
+    [data-theme="dark"] {
+      --background: #1a1a1a;
+      --text: #ffffff;
+      --border: #404040;
+      --hover: #2d2d2d;
+      --divider: #404040;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: var(--background);
+      color: var(--text);
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .save-controls {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+    }
+
+    #sessionName {
+      flex: 1;
+      padding: 8px;
+      font-size: 16px;
+      background: var(--background);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    #themeSelector {
+      padding: 8px;
+      font-size: 14px;
+      background: var(--background);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 8px 16px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .session {
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .session-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    .session-header:hover {
+      background: var(--hover);
+    }
+
+    .collapse-arrow {
+      font-size: 12px;
+      width: 20px;
+      text-align: center;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .expanded .collapse-arrow {
+      transform: rotate(90deg);
+    }
+
+    .session-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .info-item {
+      padding: 0 15px;
+      position: relative;
+    }
+
+    .info-item:not(:last-child)::after {
+      content: '|';
+      position: absolute;
+      right: 0;
+      color: var(--divider);
+    }
+
+    .session-date {
+      color: var(--text);
+      opacity: 0.7;
+      min-width: 200px;
+    }
+
+    .session-name {
+      margin: 0;
+      font-size: 16px;
+      min-width: 200px;
+    }
+
+    .session-name[contenteditable="true"]:focus {
+      outline: 2px solid #2196F3;
+      padding: 2px;
+      border-radius: 2px;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .open-btn-group {
+      display: flex;
+      position: relative;
+      height: 35px;
+    }
+
+    .open-btn {
+      background: #2196F3;
+      border-radius: 4px 0 0 4px;
+      height: 100%;
+      margin: 0;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .open-btn:hover {
+      background: #0b7dda;
+    }
+
+    .open-btn-dropdown {
+      background: #2196F3;
+      padding: 0 8px;
+      margin: 0;
+      border-radius: 0 4px 4px 0;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .open-btn-dropdown:hover {
+      background: #0b7dda;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1;
+      min-width: 180px;
+      margin-top: 4px;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-option {
+      padding: 8px 16px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .dropdown-option:hover {
+      background: var(--hover);
+    }
+
+    .delete-btn {
+      background: #f44336;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+    }
+
+    .delete-btn:hover {
+      background: #da190b;
+    }
+
+    .urls {
+      display: none;
+      margin: 10px 0 0 34px;
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+    }
+
+    .session.expanded .urls {
+      display: block;
+    }
+
+    .url-item {
+      margin: 8px 0;
+      word-break: break-all;
+    }
+
+    .url-item a {
+      color: #2196F3;
+      text-decoration: none;
+    }
+
+    .url-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-controls">
+    <div class="save-controls">
+      <input type="text" id="sessionName" placeholder="Session name (optional)">
+      <button id="saveButton">Save Current Tabs</button>
+    </div>
+    <select id="themeSelector">
+      <option value="system">System Theme</option>
+      <option value="light">Light Theme</option>
+      <option value="dark">Dark Theme</option>
+    </select>
+  </div>
+  <div id="sessions"></div>
+  <script src="theme-loader.js"></script>
+  <script src="tabs.js"></script>
+</body>
+</html>

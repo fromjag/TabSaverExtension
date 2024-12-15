@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Tab Saver",
+    "version": "1.0",
+    "description": "Save and manage your tab sessions",
+    "permissions": [
+      "tabs",
+      "storage",
+      "windows"
+    ],
+    "action": {
+      "default_title": "Tab Saver"
+    },
+    "background": {
+      "service_worker": "background.js"
+    }
+  }
