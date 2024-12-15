@@ -6,7 +6,8 @@
     "permissions": [
       "tabs",
       "storage",
-      "windows"
+      "windows",
+      "contextMenus"
     ],
     "action": {
       "default_title": "Tab Saver"
