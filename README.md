@@ -12,4 +12,3 @@
 ## Privacy notice
 
 Tab Saver doesn't collect any personal information or data.
-Any user settings are stored in your browser only.
