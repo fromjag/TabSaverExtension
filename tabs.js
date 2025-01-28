@@ -1,6 +1,27 @@
 const ARROW_RIGHT = '>';  // Usando símbolo simple para mejor compatibilidad
 const ARROW_DOWN = 'v';  // Usando símbolo simple para mejor compatibilidad
 
+// Save current tabs function
+async function saveCurrentTabs() {
+  const tabs = await chrome.tabs.query({});
+  const extensionUrl = chrome.runtime.getURL('');
+  
+  const sessionData = {
+    name: document.getElementById('sessionName').value,
+    date: formatDate(new Date()),
+    urls: tabs
+      .filter(tab => !tab.url.startsWith(extensionUrl))
+      .map(tab => tab.url)
+  };
+
+  const { sessions = [] } = await chrome.storage.local.get('sessions');
+  sessions.unshift(sessionData);
+  await chrome.storage.local.set({ sessions });
+  
+  document.getElementById('sessionName').value = '';
+  loadSessions();
+}
+
 // Format date to "Monday DD/MM/YYYY HH:mm"
 function formatDate(date) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -121,25 +142,15 @@ async function loadSessions() {
   });
 }
 
-// Save current tabs
-document.getElementById('saveButton').addEventListener('click', async () => {
-  const tabs = await chrome.tabs.query({});
-  const extensionUrl = chrome.runtime.getURL('');
-  
-  const sessionData = {
-    name: document.getElementById('sessionName').value,
-    date: formatDate(new Date()),
-    urls: tabs
-      .filter(tab => !tab.url.startsWith(extensionUrl))
-      .map(tab => tab.url)
-  };
+// Add event listeners
+document.getElementById('saveButton').addEventListener('click', saveCurrentTabs);
 
-  const { sessions = [] } = await chrome.storage.local.get('sessions');
-  sessions.unshift(sessionData);
-  await chrome.storage.local.set({ sessions });
-  
-  document.getElementById('sessionName').value = '';
-  loadSessions();
+// Add keypress event listener to input field
+document.getElementById('sessionName').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault(); // Prevent default form submission
+    saveCurrentTabs();
+  }
 });
 
 // Theme selector
