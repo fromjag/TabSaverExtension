@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Tab Saver</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
   <style>
     :root {
       --background: #ffffff;
@@ -20,7 +21,7 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
@@ -44,53 +45,81 @@
 
     #sessionName {
       flex: 1;
-      padding: 8px;
+      padding: 8px 12px;
       font-size: 16px;
       background: var(--background);
       color: var(--text);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    #sessionName:focus {
+      border-color: #2196F3;
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
     }
 
     #themeSelector {
-      padding: 8px;
+      padding: 8px 12px;
       font-size: 14px;
       background: var(--background);
       color: var(--text);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #themeSelector:hover {
+      border-color: #2196F3;
     }
 
     button {
       padding: 8px 16px;
       cursor: pointer;
-      background: #4CAF50;
-      color: white;
+      font-weight: 500;
       border: none;
-      border-radius: 4px;
-      height: 35px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      height: 40px;
     }
 
-    button:hover {
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .save-btn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .save-btn:hover {
       background: #45a049;
     }
 
     .session {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border: 1px solid var(--border);
-      padding: 10px;
-      border-radius: 4px;
+      padding: 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .session:hover {
+      border-color: #2196F3;
     }
 
     .session-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
-      padding: 5px;
-      border-radius: 4px;
+      padding: 8px;
+      border-radius: 8px;
     }
 
     .session-header:hover {
@@ -99,13 +128,14 @@
 
     .collapse-arrow {
       font-size: 12px;
-      width: 20px;
-      text-align: center;
-      transition: transform 0.2s;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      border-radius: 50%;
+      background: var(--hover);
+      transition: transform 0.2s;
     }
 
     .expanded .collapse-arrow {
@@ -124,71 +154,67 @@
     }
 
     .info-item:not(:last-child)::after {
-      content: '|';
+      content: '';
       position: absolute;
       right: 0;
-      color: var(--divider);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 16px;
+      background: var(--divider);
     }
 
     .session-date {
       color: var(--text);
       opacity: 0.7;
       min-width: 200px;
+      font-size: 14px;
     }
 
     .session-name {
       margin: 0;
       font-size: 16px;
       min-width: 200px;
+      padding: 4px 8px;
+      border-radius: 4px;
     }
 
     .session-name[contenteditable="true"]:focus {
-      outline: 2px solid #2196F3;
-      padding: 2px;
-      border-radius: 2px;
+      outline: none;
+      background: rgba(33, 150, 243, 0.1);
     }
 
     .session-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
 
     .open-btn-group {
       display: flex;
       position: relative;
-      height: 35px;
     }
 
     .open-btn {
       background: #2196F3;
-      border-radius: 4px 0 0 4px;
-      height: 100%;
-      margin: 0;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
+      color: white;
+      border-radius: 8px 0 0 8px;
     }
 
     .open-btn:hover {
-      background: #0b7dda;
+      background: #1976D2;
     }
 
     .open-btn-dropdown {
       background: #2196F3;
+      color: white;
       padding: 0 8px;
-      margin: 0;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 8px 8px 0;
       border-left: 1px solid rgba(255,255,255,0.2);
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-size: 12px;
-      font-weight: bold;
     }
 
     .open-btn-dropdown:hover {
-      background: #0b7dda;
+      background: #1976D2;
     }
 
     .dropdown-content {
@@ -198,11 +224,12 @@
       top: 100%;
       background: var(--background);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       z-index: 1;
-      min-width: 180px;
+      min-width: 200px;
       margin-top: 4px;
+      overflow: hidden;
     }
 
     .dropdown-content.show {
@@ -210,10 +237,11 @@
     }
 
     .dropdown-option {
-      padding: 8px 16px;
+      padding: 10px 16px;
       cursor: pointer;
       color: var(--text);
       font-size: 14px;
+      transition: all 0.2s;
     }
 
     .dropdown-option:hover {
@@ -222,19 +250,16 @@
 
     .delete-btn {
       background: #f44336;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
+      color: white;
     }
 
     .delete-btn:hover {
-      background: #da190b;
+      background: #d32f2f;
     }
 
     .urls {
       display: none;
-      margin: 10px 0 0 34px;
+      margin: 12px 0 0 34px;
       padding-left: 20px;
       border-left: 2px solid var(--border);
     }
@@ -246,27 +271,45 @@
     .url-item {
       margin: 8px 0;
       word-break: break-all;
+      padding: 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .url-item:hover {
+      background: var(--hover);
     }
 
     .url-item a {
       color: #2196F3;
       text-decoration: none;
+      font-size: 14px;
     }
 
     .url-item a:hover {
       text-decoration: underline;
+    }
+
+    .tab-count {
+      background: var(--hover);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <div class="top-controls">
     <div class="save-controls">
-      <input type="text" id="sessionName" placeholder="Session name (optional)">
-      <button id="saveButton">Save Current Tabs</button>
+      <input type="text" id="sessionName" placeholder="Name (optional)" class="shadow-sm">
+      <button id="saveButton" class="save-btn">
+        Save Current Tabs
+      </button>
     </div>
-    <select id="themeSelector">
+    <select id="themeSelector" class="shadow-sm">
       <option value="system">System Theme</option>
-      <option value="light">Light Theme</option>
+      <option value="light">Light Theme</option>∫
       <option value="dark">Dark Theme</option>
     </select>
   </div>
