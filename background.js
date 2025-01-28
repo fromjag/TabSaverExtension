@@ -1,13 +1,4 @@
-// Crear el menú contextual cuando se instala la extensión
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'saveTabs',
-    title: 'Quick Save Tabs',
-    contexts: ['action']  // 'action' es para el menú del icono de la extensión
-  });
-});
-
-// Función para formatear la fecha
+// Function to format the date
 function formatDate(date) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const day = days[date.getDay()];
@@ -20,9 +11,9 @@ function formatDate(date) {
   return `${day} ${dd}/${mm}/${yyyy} ${hh}:${min}`;
 }
 
-// Manejar el clic en el icono de la extensión
+// Handle click on the extension icon
 chrome.action.onClicked.addListener(async function() {
-  // Buscar si ya existe una pestaña con la página de la extensión
+  // Search if a tab with the extension page already exists
   const tabs = await chrome.tabs.query({});
   const extensionUrl = chrome.runtime.getURL('tabs.html');
   
@@ -31,12 +22,12 @@ chrome.action.onClicked.addListener(async function() {
   );
   
   if (existingTab) {
-    // Si existe, activar esa pestaña
+    // If it exists, activate that tab
     await chrome.tabs.update(existingTab.id, { active: true });
-    // Si la pestaña está en otra ventana, enfocamos esa ventana
+    // If the tab is in another window, focus that window
     await chrome.windows.update(existingTab.windowId, { focused: true });
   } else {
-    // Si no existe, crear nueva pestaña
+    // If it doesn't exist, create new tab
     chrome.tabs.create({
       url: 'tabs.html'
     });

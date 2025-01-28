@@ -21,8 +21,7 @@
   "permissions": [
     "tabs",
     "storage",
-    "windows",
-    "contextMenus"
+    "windows"
   ],
   "background": {
     "service_worker": "background.js"
