@@ -138,7 +138,11 @@
       transition: transform 0.2s;
     }
 
-    .expanded .collapse-arrow {
+    .collapse-arrow svg {
+      transition: transform 0.2s;
+    }
+
+    .expanded .collapse-arrow svg {
       transform: rotate(90deg);
     }
 
@@ -303,13 +307,11 @@
   <div class="top-controls">
     <div class="save-controls">
       <input type="text" id="sessionName" placeholder="Name (optional)" class="shadow-sm">
-      <button id="saveButton" class="save-btn">
-        Save Current Tabs
-      </button>
+      <button id="saveButton" class="save-btn">Save Current Tabs</button>
     </div>
     <select id="themeSelector" class="shadow-sm">
       <option value="system">System Theme</option>
-      <option value="light">Light Theme</option>∫
+      <option value="light">Light Theme</option>
       <option value="dark">Dark Theme</option>
     </select>
   </div>

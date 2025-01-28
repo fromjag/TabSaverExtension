@@ -1,6 +1,3 @@
-const ARROW_RIGHT = '>';  // Usando símbolo simple para mejor compatibilidad
-const ARROW_DOWN = 'v';  // Usando símbolo simple para mejor compatibilidad
-
 // Save current tabs function
 async function saveCurrentTabs() {
   const tabs = await chrome.tabs.query({});
@@ -47,7 +44,9 @@ async function loadSessions() {
     
     sessionElement.innerHTML = `
       <div class="session-header">
-        <span class="collapse-arrow">${ARROW_RIGHT}</span>
+        <span class="collapse-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </span>
         <div class="session-info">
           <span class="tab-count info-item">${session.urls.length} tabs</span>
           <span class="session-date info-item">${session.date}</span>
@@ -56,13 +55,17 @@ async function loadSessions() {
         <div class="session-actions">
           <div class="open-btn-group">
             <button class="open-btn">Open</button>
-            <button class="open-btn-dropdown">${ARROW_DOWN}</button>
+            <button class="open-btn-dropdown">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
             <div class="dropdown-content">
               <div class="dropdown-option" data-action="current">Open in current window</div>
               <div class="dropdown-option" data-action="new">Open in new window</div>
             </div>
           </div>
-          <button class="delete-btn">Delete</button>
+          <button class="delete-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
       </div>
       <div class="urls">
